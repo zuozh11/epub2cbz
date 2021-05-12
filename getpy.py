@@ -41,7 +41,7 @@ class GetEngine(object):
                     if x.getAttribute('id') == pid][0]
                    for pid in page_order]
         imglist = [(x, self.__gen_imgname(x)) for x in imgpath]
-        imglist = filter(lambda x: x[1] is not None, imglist)
+        imglist = list(filter(lambda x: x[1] is not None, imglist))
         return title, imglist
 
     # 获取opf文件xml根节点

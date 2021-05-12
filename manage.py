@@ -30,7 +30,7 @@ class FileManager(object):
         src = self.zfile.extract(file, self.work_directory)
         dst = os.path.join(self.work_directory, name)
         shutil.move(src, dst)
-        print(f'[src]: {src}  -->  [dst]: {dst}')
+        # print(f'[src]: {src}  -->  [dst]: {dst}')
         img = Image.open(dst)
         w, h = img.size
         if w / h > 0.75:
@@ -41,8 +41,8 @@ class FileManager(object):
     def package(self):
         zippath = self.title + '.cbz'
         with zipfile.ZipFile(zippath, mode='w', compression=zipfile.ZIP_STORED) as zf:
-            file_names = [os.path.join(self.work_directory, x) for x in os.listdir(self.work_directory) if
-                          os.path.isfile(os.path.join(self.work_directory, x))]
+            file_names = list(filter(lambda x: os.path.isfile(x),
+                                     [os.path.join(self.work_directory, x) for x in os.listdir(self.work_directory)]))
             for fn in file_names:
                 zf.write(fn, arcname=os.path.split(fn)[1])
         os.chmod(zippath, 448)
