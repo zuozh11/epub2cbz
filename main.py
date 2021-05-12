@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shutil
 
 from getpy import GetEngine
 from manage import FileManager
@@ -16,7 +17,7 @@ def process(epub_file):
     with FileManager(epub_file) as fm:
         ge = GetEngine(fm.zfile)
         title, imglist = ge.get_info()
-        fm.set_directory(os.path.join(path, title))
+        fm.set_directory(path, title)
         for img in imglist:
             fm.img_handler(*img)
         fm.package()
@@ -30,6 +31,7 @@ def executor():
     print(epub_list)
     for epub_file in epub_list:
         process(epub_file)
+    shutil.rmtree(os.path.join(path, '.tempworkdir'))
 
 
 if __name__ == "__main__":

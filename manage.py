@@ -17,35 +17,38 @@ class FileManager(object):
     def __init__(self, epub_file):
         self.epub_file = epub_file
         self.zfile = None
-        self.directory = ''
+        self.title = ''
+        self.work_directory = ''
 
-    def set_directory(self, directory):
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        self.directory = directory
+    def set_directory(self, path, directory):
+        self.title = os.path.join(path, directory)
+        self.work_directory = os.path.join(path, '.tempworkdir', directory)
+        if not os.path.exists(self.work_directory):
+            os.makedirs(self.work_directory)
 
     def img_handler(self, file, name):
-        temp = os.path.join(self.directory, 'temp')
-        self.zfile.extract(file, temp)
-        path = os.path.join(temp, file)
-        img = Image.open(path)
+        src = self.zfile.extract(file, self.work_directory)
+        dst = os.path.join(self.work_directory, name)
+        shutil.move(src, dst)
+        print(f'[src]: {src}  -->  [dst]: {dst}')
+        img = Image.open(dst)
         w, h = img.size
         if w / h > 0.75:
             img.rotate(-90)
-        img.save(os.path.join(self.directory, name), 'jpeg')
+            img.save(dst)
         img.close()
 
     def package(self):
-        zippath = self.directory + '.cbz'
-        with zipfile.ZipFile(self.directory + '.cbz', mode='w', compression=zipfile.ZIP_STORED) as zf:
-            file_names = [os.path.join(self.directory, x) for x in os.listdir(self.directory) if
-                          os.path.isfile(os.path.join(self.directory, x))]
+        zippath = self.title + '.cbz'
+        with zipfile.ZipFile(zippath, mode='w', compression=zipfile.ZIP_STORED) as zf:
+            file_names = [os.path.join(self.work_directory, x) for x in os.listdir(self.work_directory) if
+                          os.path.isfile(os.path.join(self.work_directory, x))]
             for fn in file_names:
                 zf.write(fn, arcname=os.path.split(fn)[1])
         os.chmod(zippath, 448)
 
     def __clean(self):
-        shutil.rmtree(self.directory)
+        shutil.rmtree(self.work_directory)
 
     def __enter__(self):
         self.zfile = zipfile.ZipFile(self.epub_file)
