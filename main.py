@@ -6,7 +6,7 @@ import os
 from getpy import GetEngine
 from manage import FileManager
 
-path = './'
+path = './test'
 
 
 def process(epub_file):
