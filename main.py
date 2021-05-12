@@ -19,6 +19,7 @@ def process(epub_file):
         fm.set_directory(os.path.join(path, title))
         for img in imglist:
             fm.img_handler(*img)
+        fm.package()
 
     print('--- Epub to CBZ conversion successful')
 
