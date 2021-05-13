@@ -23,8 +23,6 @@ class FileManager(object):
     def set_directory(self, path, directory):
         self.title = os.path.join(path, directory)
         self.work_directory = os.path.join(path, '.tempworkdir', directory)
-        if not os.path.exists(self.work_directory):
-            os.makedirs(self.work_directory)
 
     def img_handler(self, file, name):
         src = self.zfile.extract(file, self.work_directory)
