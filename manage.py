@@ -47,9 +47,6 @@ class FileManager(object):
                 zf.write(fn, arcname=os.path.split(fn)[1])
         os.chmod(zippath, 448)
 
-    def __clean(self):
-        shutil.rmtree(self.work_directory)
-
     def __enter__(self):
         self.zfile = zipfile.ZipFile(self.epub_file)
         return self
@@ -57,4 +54,3 @@ class FileManager(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.zfile is not None:
             self.zfile.close()
-        self.__clean()
