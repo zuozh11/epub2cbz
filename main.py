@@ -5,47 +5,59 @@ import shutil
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
-from rich.progress import Progress, TextColumn, BarColumn, DownloadColumn, TransferSpeedColumn, TimeRemainingColumn, \
+from rich.console import Console
+from rich.progress import Progress, TextColumn, BarColumn, TimeRemainingColumn, \
     SpinnerColumn, TimeElapsedColumn
 
 from getpy import GetEngine
 from manage import FileManager
 
+console = Console()
 progress = Progress(
     SpinnerColumn(speed=1.5, finished_text='✔'),
     TextColumn("[bold blue]{task.description}", justify="right"),
-    BarColumn(bar_width=None),
+    BarColumn(bar_width=40),
     "[progress.percentage]{task.percentage:>3.1f}%",
     "•",
     TimeRemainingColumn(),
     TimeElapsedColumn(),
-    auto_refresh=False
+    auto_refresh=False,
+    console=console
 )
 path = ''
 
 
-def process(_epub, _task_id):
-    with FileManager(_epub) as fm:
+def process(_epub, _suffix, _task_id):
+    with FileManager(_epub, path) as fm:
         _title, _imglist = GetEngine(fm.zfile).get_info()
-        fm.set_directory(path, _title)
+        fm.set_directory(_title)
         progress.update(_task_id, description=_title, total=len(_imglist) + 1)
         progress.start_task(_task_id)
         progress.refresh()
         for img in _imglist:
-            fm.img_handler(*img)
+            fm.img_handler(*img, console=console)
             progress.advance(_task_id, 1)
             progress.refresh()
-        fm.package()
+        fm.package(_suffix)
         progress.advance(_task_id, 1)
         progress.refresh()
+        console.log('[bold green]转换完毕[/bold green]', _title, '[bold red]-->[/bold red]',
+                    os.path.join(path, _title) + _suffix)
 
 
 if __name__ == "__main__":
     path = sys.argv[1:] if sys.argv[1:] else './test'
+    suffix = 'cbz'
+    suffix = '.' + suffix if not suffix.startswith('.') else suffix
     with progress:
+        console.rule("[bold red]开始运行epub2cbz", style='bold white')
         with ThreadPoolExecutor() as pool:
             epub_list = [os.path.join(path, x) for x in os.listdir(path) if os.path.splitext(x)[1] == '.epub']
+            console.log('找到以下epub文件：')
             for epub in epub_list:
+                console.log('[bold red]  -', epub)
                 task_id = progress.add_task(description='正在读取...', start=False)
-                future = pool.submit(process, epub, task_id)
-    shutil.rmtree(os.path.join(path, '.tempworkdir'))
+                future = pool.submit(process, epub, suffix, task_id)
+        console.rule('[bold red]所有文件转换完毕', style='bold white')
+        console.print('')
+    # shutil.rmtree(os.path.join(path, '.tempworkdir'))
