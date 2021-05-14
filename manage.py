@@ -14,9 +14,10 @@ class FileManager(object):
 
     """
 
-    def __init__(self, epub_file, path):
+    def __init__(self, epub_file, path, console):
         self.epub_file = epub_file
         self.path = path
+        self.console = console
         self.zfile = None
         self.title = ''
         self.work_directory = ''
@@ -25,7 +26,7 @@ class FileManager(object):
         self.title = directory
         self.work_directory = os.path.join(self.path, '.tempworkdir', directory)
 
-    def img_handler(self, file, name, console):
+    def img_handler(self, file, name):
         src = self.zfile.extract(file, self.work_directory)
         dst = os.path.join(self.work_directory, name)
         shutil.move(src, dst)
@@ -35,7 +36,7 @@ class FileManager(object):
         if w / h > 0.75:
             rotate_img = img.transpose(Image.ROTATE_270)
             rotate_img.save(dst)
-            console.log('检测到竖屏横向图片，旋转至正向：', self.title, '/', name)
+            self.console.log('[修正图片方向]', '[bold red]-->[/bold red]', f'{self.title}/{name}')
         img.close()
 
     def package(self, suffix):
