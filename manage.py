@@ -14,17 +14,18 @@ class FileManager(object):
 
     """
 
-    def __init__(self, epub_file):
+    def __init__(self, epub_file, path):
         self.epub_file = epub_file
+        self.path = path
         self.zfile = None
         self.title = ''
         self.work_directory = ''
 
-    def set_directory(self, path, directory):
-        self.title = os.path.join(path, directory)
-        self.work_directory = os.path.join(path, '.tempworkdir', directory)
+    def set_directory(self, directory):
+        self.title = directory
+        self.work_directory = os.path.join(self.path, '.tempworkdir', directory)
 
-    def img_handler(self, file, name):
+    def img_handler(self, file, name, console):
         src = self.zfile.extract(file, self.work_directory)
         dst = os.path.join(self.work_directory, name)
         shutil.move(src, dst)
@@ -32,12 +33,13 @@ class FileManager(object):
         img = Image.open(dst)
         w, h = img.size
         if w / h > 0.75:
-            img.rotate(-90)
-            img.save(dst)
+            rotate_img = img.transpose(Image.ROTATE_270)
+            rotate_img.save(dst)
+            console.log('检测到竖屏横向图片，旋转至正向：', self.title, '/', name)
         img.close()
 
-    def package(self):
-        zippath = self.title + '.cbz'
+    def package(self, suffix):
+        zippath = os.path.join(self.path, self.title) + suffix
         with zipfile.ZipFile(zippath, mode='w', compression=zipfile.ZIP_STORED) as zf:
             file_names = list(filter(lambda x: os.path.isfile(x),
                                      [os.path.join(self.work_directory, x) for x in os.listdir(self.work_directory)]))
