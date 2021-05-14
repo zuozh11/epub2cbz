@@ -26,11 +26,10 @@ progress = Progress(
     auto_refresh=False,
     console=console
 )
-path = ''
 
 
 def process(_epub, _suffix, _task_id):
-    with FileManager(_epub, path, console) as fm:
+    with FileManager(_epub, path) as fm:
         _title, _imglist = GetEngine(fm.zfile).get_info()
         fm.set_directory(_title)
         progress.update(_task_id, description=_title, total=len(_imglist) + 1)
@@ -48,7 +47,9 @@ def process(_epub, _suffix, _task_id):
 
 
 if __name__ == "__main__":
+    # Root directory
     path = sys.argv[1:] if sys.argv[1:] else './test'
+    # 需要打包成压缩文档的扩展名
     suffix = 'cbz'
     suffix = '.' + suffix if not suffix.startswith('.') else suffix
     with progress:
@@ -62,4 +63,4 @@ if __name__ == "__main__":
             console.print('')
         console.rule('[bold red]所有任务执行完毕', style='bold white')
         console.print('')
-    # shutil.rmtree(os.path.join(path, '.tempworkdir'))
+    shutil.rmtree(os.path.join(path, '.tempworkdir'))

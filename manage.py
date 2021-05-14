@@ -12,14 +12,25 @@ class FileManager(object):
 
         It has the following methods:
 
+        set_directory() --- Which set up the working directory
+
+        img_handler() --- Which xtract from the compressed file to the output directory and process the picture.
+
+        package() --- Which packaged into a compressed file with a specific suffix.
+
+        To create an instance of this object, pass in the name of epubfile and specified path.
+
     """
 
-    def __init__(self, epub_file, path, console):
+    def __init__(self, epub_file, path):
+        # epub文件
         self.epub_file = epub_file
+        # 指定的路径
         self.path = path
-        self.console = console
         self.zfile = None
+        # 压缩档名称
         self.title = ''
+        # 工作目录，任务结束后会删除
         self.work_directory = ''
 
     def set_directory(self, directory):
@@ -27,16 +38,19 @@ class FileManager(object):
         self.work_directory = os.path.join(self.path, '.tempworkdir', directory)
 
     def img_handler(self, file, name):
+        # 解压到工作目录
         src = self.zfile.extract(file, self.work_directory)
         dst = os.path.join(self.work_directory, name)
+        # 移动到根工作目录，并按顺序改名
         shutil.move(src, dst)
-        # print(f'[src]: {src}  -->  [dst]: {dst}')
+        # 图片处理
         img = Image.open(dst)
         w, h = img.size
+        # 修正图片方向
         if w / h > 0.75:
             rotate_img = img.transpose(Image.ROTATE_270)
             rotate_img.save(dst)
-            self.console.log('[修正图片方向]', '[bold red]-->[/bold red]', f'{self.title}/{name}')
+            # self.console.log('[修正图片方向]', '[bold red]-->[/bold red]', f'{self.title}/{name}')
         img.close()
 
     def package(self, suffix):

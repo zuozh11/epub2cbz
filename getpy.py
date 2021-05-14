@@ -7,21 +7,13 @@ import xml.dom.minidom
 class GetEngine(object):
     """
 
-        This class contains the methods needed to get the files,
-        to help make the pdf file.
+        This class contains the methods to get the picture sequence , sorted name and other info.
 
         The class contains the following methods:
 
-        get_html() --- Which gets the html file names.
+        get_info() --- Which gets the manga title and a sorted name list of pics.
 
-        get_pdf() --- Which gets the pdf file names.
-
-        get_css() --- Which gets the css file names.
-
-        get_images() --- Which gets the image file names.
-
-        To create an instance of this object, pass in the name of the directory
-        that stores all the extracted files from the epub file.
+        To create an instance of this object, pass in the Zipfile Object.
 
     """
 
@@ -44,21 +36,23 @@ class GetEngine(object):
         imglist = list(filter(lambda x: x[1] is not None, imglist))
         return title, imglist
 
-    # 获取opf文件xml根节点
+    # Get the opf file xml root node
     def __get_opf(self):
-        # 通过io.SringIO()获取文件流（file对象）
+        # Get the file stream through io.SringIO()
         instream = io.StringIO(self.zfile.read(os.path.join('META-INF', 'container.xml')).decode("utf-8"))
-        # 利用 xml.dom.minidom.parse() 将文件（file对象转为DOM）
+        # Use xml.dom.minidom.parse () to convert a file (file object to DOM)
         dom_tree = xml.dom.minidom.parse(instream)
-        # 获取根节点
+        # Get the root node
         root = dom_tree.documentElement
         rootfile = root.getElementsByTagName('rootfile')[0]
+        # Opf file path
         path = rootfile.getAttribute('full-path')
         instream = io.StringIO(self.zfile.read(path).decode("utf-8"))
         dom_tree = xml.dom.minidom.parse(instream)
         self.opf = dom_tree.documentElement
         return self.opf
 
+    # Get the name of the sorted picture like '015.jpg'
     def __gen_imgname(self, path):
         sname = os.path.split(path)[1]
         ssp = os.path.splitext(sname)
@@ -67,6 +61,7 @@ class GetEngine(object):
         self.n = self.n + 1
         return str(self.n).zfill(3) + ssp[1]
 
+    # Parse the html file to get the corresponding picture path
     def __get_imgpath(self, htmlpath):
         with self.zfile.open(htmlpath) as f:
             line = f.readline().decode("utf-8")
