@@ -16,8 +16,6 @@ Or you can download the source code of epub2cbz, enter the source directory, and
 
 Then use `python ./epub2cbz.py` instead of `epub2cbz` command
 
-**https://github.com/nihui/waifu2x-ncnn-vulkan/releases**
-
 ## Usages
 
 ### Example Command

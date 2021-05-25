@@ -16,8 +16,6 @@ pip install epub2cbz
 
 之后使用`python ./epub2cbz.py`来代替`epub2cbz`命令
 
-**https://github.com/nihui/waifu2x-ncnn-vulkan/releases**
-
 ## 使用方法
 
 ### 示例
