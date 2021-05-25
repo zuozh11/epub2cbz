@@ -47,9 +47,9 @@ Usage: epub2cbz [-options] path
 
 如果这使你困扰，你可以加上`-r`或`--rotate`参数来自动监测宽图并将它旋转至正常的方向。
 
-<img src="doc/before.png" alt="before" style="width:39%;" />
+<img src="./doc/before.png" alt="before" style="width:39%;" />
 
-<img src="doc/after.png" alt="after" style="width:59%;" />
+<img src="./doc/after.png" alt="after" style="width:59%;" />
 
 ## 其它使用到的开源项目
 

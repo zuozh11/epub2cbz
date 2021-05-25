@@ -50,9 +50,9 @@ For this you may need to rotate your device frequently to watch books, and also 
 
 If this bothers you, you can add the `-r` or `--rotate` parameter to automatically monitor the wide image and rotate it to the normal direction.
 
-<img src="doc/before.png" alt="before" style="width:39%;" />
+<img src="./doc/before.png" alt="before" style="width:39%;" />
 
-<img src="doc/after.png" alt="after" style="width:59%;" />
+<img src="./doc/after.png" alt="after" style="width:59%;" />
 
 ## Other Open-Source Code Used
 
