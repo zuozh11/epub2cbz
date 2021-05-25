@@ -52,7 +52,7 @@ class FileManager(object):
             # 图片处理 修正图片方向
             img = Image.open(dst)
             w, h = img.size
-            if w / h > 0.75:
+            if h > 2200:
                 img.transpose(Image.ROTATE_270).save(dst)
                 console.log('[Correct orientation]', '[bold red]-->[/bold red]', f'{self.title}/{name}')
             img.close()

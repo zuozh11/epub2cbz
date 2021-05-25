@@ -30,7 +30,8 @@ help_text = """
     
     [bold blue]The options include:[/bold blue]
       -h --help                    show this help
-      -r --rotate                  correct orientation
+      -r --rotate                  correct orientation.
+                                   This feature may only be applicable to picture with 1200 pixel width standard.
       -s: --suffix: <value>        specify the output file suffix, default is .cbz
       --folder                     output to a folder instead of the compressed file
 """

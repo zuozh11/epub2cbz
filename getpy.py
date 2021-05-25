@@ -22,13 +22,14 @@ class GetEngine(object):
             print('ERROR: zfile is None')
         self.zfile = zfile
         self.opf = ''
-        self.n = 0
+        self.n = -1
 
     def get_info(self):
         root = self.__get_opf()
         title = root.getElementsByTagName('dc:title')[0].firstChild.data
 
-        page_order = [x.getAttribute('idref') for x in root.getElementsByTagName('itemref')]
+        ncx = [x for x in root.getElementsByTagName('spine') if x.getAttribute('toc') == 'ncx'][0]
+        page_order = [x.getAttribute('idref') for x in ncx.getElementsByTagName('itemref')]
         imgpath = [[self.__get_imgpath(x.getAttribute('href')) for x in root.getElementsByTagName('item')
                     if x.getAttribute('id') == pid][0]
                    for pid in page_order]
@@ -56,7 +57,7 @@ class GetEngine(object):
     def __gen_imgname(self, path):
         sname = os.path.split(path)[1]
         ssp = os.path.splitext(sname)
-        if ssp[0] == 'cover' or ssp[0] == 'createby':
+        if ssp[0] == 'createby':
             return None
         self.n = self.n + 1
         return str(self.n).zfill(3) + ssp[1]
