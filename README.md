@@ -6,28 +6,22 @@
 
 ## 安装
 
-epub2cbz已注册到pip,你可以使用pip包管理工具来进行快速安装
+下载epub2cbz的源码，进入到源码目录，运行`pip install -r requirements.txt`。
 
-```shell
-pip install epub2cbz
-```
-
-或者你可以下载epub2cbz的源码，进入到源码目录，运行`pip install requirements.txt`。
-
-之后使用`python ./epub2cbz.py`来代替`epub2cbz`命令
+之后使用`python epub2cbz.py`来运行
 
 ## 使用方法
 
 ### 示例
 
 ```shell
-epb2cbz /comics/batman/
+python epub2cbz.py /comics/batman/
 ```
 
 ### 参数说明
 
 ```console
-Usage: epub2cbz [-options] path
+Usage: epub2cbz.py [-options] path
 
       -h --help               显示此帮助
       -r --rotate             正确的方向。此功能仅适用于标准像素宽度为1200的图片

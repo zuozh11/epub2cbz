@@ -6,28 +6,22 @@ Supports files that comply with the epub comic standard stipulated by the vol.mo
 
 ## Install
 
-epub2cbz has been registered with pip, you can use the pip package management tool for quick installation.
+download the source code of epub2cbz, enter the source directory, and run `pip install -r requirements.txt`。
 
-```shell
-pip install epub2cbz
-```
-
-Or you can download the source code of epub2cbz, enter the source directory, and run `pip install requirements.txt`。
-
-Then use `python ./epub2cbz.py` instead of `epub2cbz` command
+Then use `python epub2cbz.py`
 
 ## Usages
 
 ### Example Command
 
 ```shell
-epb2cbz /comics/batman/
+python epub2cbz.py /comics/batman/
 ```
 
 ### Full Usages
 
 ```console
-Usage: epub2cbz [-options] path
+Usage: epub2cbz.py [-options] path
 
       -h --help               show this help
       -r --rotate             correct orientation.This feature may only be applicable 

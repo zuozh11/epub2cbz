@@ -40,7 +40,7 @@ class GetEngine(object):
     # Get the opf file xml root node
     def __get_opf(self):
         # Get the file stream through io.SringIO()
-        instream = io.StringIO(self.zfile.read(os.path.join('META-INF', 'container.xml')).decode("utf-8"))
+        instream = io.StringIO(self.zfile.read('META-INF/container.xml').decode("utf-8"))
         # Use xml.dom.minidom.parse () to convert a file (file object to DOM)
         dom_tree = xml.dom.minidom.parse(instream)
         # Get the root node
@@ -74,5 +74,6 @@ class GetEngine(object):
                                .replace('\"', '').replace('\'', ''))
                     if imgpath.startswith('../') or imgpath.startswith('./'):
                         imgpath = os.path.normpath(os.path.join(os.path.split(htmlpath)[0], imgpath))
+                        imgpath = imgpath.replace('\\', '/')
                     return imgpath
                 line = f.readline().decode("utf-8")
